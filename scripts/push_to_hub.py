@@ -18,7 +18,10 @@ Requirements:
 import argparse
 import json
 import os
+import sys
 import tempfile
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import yaml
 from dotenv import load_dotenv
 from huggingface_hub import HfApi, login
