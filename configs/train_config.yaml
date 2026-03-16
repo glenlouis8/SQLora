@@ -1,0 +1,64 @@
+# ── Model ──────────────────────────────────────────────────────────────────
+model:
+  name: "meta-llama/Llama-3.2-3B-Instruct"
+  max_seq_length: 2048
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: "bfloat16"   # bfloat16 for Ampere+; float16 as fallback
+  bnb_4bit_quant_type: "nf4"           # Normal Float 4 - better than fp4 for LLMs
+  bnb_4bit_use_double_quant: true      # Nested quantization saves ~0.4 bits/param
+
+# ── LoRA ───────────────────────────────────────────────────────────────────
+lora:
+  r: 16                                # Rank; 16 is a strong default for 3B models
+  lora_alpha: 32                       # Scale = alpha/r = 2.0
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules:                      # All Llama 3.2 attention + MLP projections
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+# ── Dataset ────────────────────────────────────────────────────────────────
+data:
+  dataset_name: "tatsu-lab/alpaca"
+  train_split_ratio: 0.95
+  eval_split_ratio: 0.05
+  eval_sample_size: 200                # Rows used for ROUGE-L (full split for ppl)
+  seed: 42
+
+# ── Training ───────────────────────────────────────────────────────────────
+training:
+  output_dir: "outputs/checkpoints"
+  final_adapter_dir: "outputs/final_adapter"
+  num_train_epochs: 1                  # 1 epoch over 52k examples ~2.5hrs on RTX 4090
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 4      # Effective batch size = 16
+  gradient_checkpointing: true        # Reduces VRAM ~40% at cost of ~20% speed
+  optim: "paged_adamw_8bit"           # Pages optimizer states to avoid OOM
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.03
+  weight_decay: 0.001
+  fp16: false
+  bf16: true
+  max_grad_norm: 1.0
+  logging_steps: 25
+  save_strategy: "steps"
+  save_steps: 500
+  save_total_limit: 2
+
+# ── Evaluation ─────────────────────────────────────────────────────────────
+eval:
+  generation_max_new_tokens: 256
+  generation_temperature: 0.1
+  generation_do_sample: false
+
+# ── Hub ────────────────────────────────────────────────────────────────────
+hub:
+  repo_id: "YOUR_HF_USERNAME/llama-3.2-3b-alpaca-qlora"
+  private: false
