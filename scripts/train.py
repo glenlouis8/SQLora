@@ -25,8 +25,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import time
 import yaml
 import torch
-from transformers import set_seed, TrainingArguments
-from trl import SFTTrainer
+from transformers import set_seed
+from trl import SFTTrainer, SFTConfig
 from peft import get_peft_model
 
 from src.data_utils import load_and_split, get_formatting_func
@@ -64,7 +64,7 @@ def main():
 
     # ── Training arguments ──────────────────────────────────────────────────
     tc = cfg["training"]
-    training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=tc["output_dir"],
         num_train_epochs=tc["num_train_epochs"],
         per_device_train_batch_size=tc["per_device_train_batch_size"],
@@ -83,6 +83,9 @@ def main():
         save_steps=tc["save_steps"],
         save_total_limit=tc["save_total_limit"],
         report_to="none",  # disable wandb/tensorboard by default
+        max_seq_length=cfg["model"]["max_seq_length"],
+        dataset_num_proc=4,
+        packing=False,             # cleaner loss signal for instruction tuning
     )
 
     # ── Trainer ─────────────────────────────────────────────────────────────
@@ -91,9 +94,6 @@ def main():
         train_dataset=train_ds,
         eval_dataset=None,         # we evaluate separately via evaluate.py
         formatting_func=get_formatting_func(tokenizer),
-        max_seq_length=cfg["model"]["max_seq_length"],
-        dataset_num_proc=4,
-        packing=False,             # cleaner loss signal for instruction tuning
         args=training_args,
     )
 
