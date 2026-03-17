@@ -2,6 +2,17 @@
 
 Fine-tuning `meta-llama/Llama-3.2-3B-Instruct` on `tatsu-lab/alpaca` (52k examples) using QLoRA — 4-bit NF4 quantization + LoRA adapters on all 7 attention/MLP projection layers.
 
+## Results
+
+Evaluated on a held-out 5% split (2,601 examples, seed=42).
+
+| Metric | Before | After | Delta |
+|--------|--------|-------|-------|
+| Perplexity | 25.84 | 4.82 | -81.3% |
+| ROUGE-L | 0.259 | 0.353 | +36.3% |
+
+Evaluated on 2026-03-17. ROUGE-L computed over 200 sampled examples with greedy decoding.
+
 ## Setup
 
 ```bash
@@ -24,7 +35,7 @@ python scripts/evaluate.py --stage before   # baseline metrics (perplexity + ROU
 python scripts/train.py                     # fine-tune (~2.5hrs on RTX 4090)
 python scripts/evaluate.py --stage after    # post-training metrics
 python scripts/evaluate.py --compare        # print before/after comparison table
-python scripts/push_to_hub.py              # push adapter + model card to HF Hub
+python scripts/push_to_hub.py               # push adapter + model card to HF Hub
 ```
 
 All scripts accept `--config configs/train_config.yaml` (default).
