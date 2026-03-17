@@ -83,7 +83,7 @@ def main():
         save_steps=tc["save_steps"],
         save_total_limit=tc["save_total_limit"],
         report_to="none",  # disable wandb/tensorboard by default
-        max_seq_length=cfg["model"]["max_seq_length"],
+        max_length=cfg["model"]["max_seq_length"],
         dataset_num_proc=4,
         packing=False,             # cleaner loss signal for instruction tuning
     )
