@@ -60,5 +60,5 @@ eval:
 
 # ── Hub ────────────────────────────────────────────────────────────────────
 hub:
-  repo_id: "YOUR_HF_USERNAME/llama-3.2-3b-alpaca-qlora"
+  repo_id: "glen-louis/llama-3.2-3b-alpaca-qlora"
   private: false

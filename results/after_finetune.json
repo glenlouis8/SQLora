@@ -1,0 +1,10 @@
+{
+  "stage": "after",
+  "model": "meta-llama/Llama-3.2-3B-Instruct",
+  "adapter": "outputs/final_adapter",
+  "eval_split_size": 2601,
+  "perplexity": 4.8154,
+  "rouge_l": 0.3529,
+  "rouge_sample_size": 200,
+  "eval_date": "2026-03-17"
+}
