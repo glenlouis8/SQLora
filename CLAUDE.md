@@ -25,6 +25,18 @@ python scripts/evaluate.py --compare
 
 # Push adapter + auto-generated README to HuggingFace Hub
 python scripts/push_to_hub.py
+
+# Run inference on the fine-tuned model (CLI)
+python scripts/infer.py --prompt "Write a Python function to reverse a string"
+python scripts/infer.py --interactive                          # REPL mode
+python scripts/infer.py --base --prompt "..."                  # base model for comparison
+python scripts/infer.py --adapter glen-louis/llama-3.2-3b-alpaca-qlora --prompt "..."  # from Hub
+
+# Gradio web demo (requires: pip install gradio)
+python scripts/demo.py
+python scripts/demo.py --compare                               # base vs fine-tuned side-by-side
+python scripts/demo.py --share                                 # public share link
+python scripts/demo.py --adapter glen-louis/llama-3.2-3b-alpaca-qlora  # from Hub
 ```
 
 All scripts accept `--config configs/train_config.yaml` (default).
@@ -42,6 +54,8 @@ scripts/
   train.py                  ← SFTTrainer training loop
   evaluate.py               ← before/after eval → writes results/*.json
   push_to_hub.py            ← pushes adapter + injects real numbers into README
+  infer.py                  ← CLI inference: --prompt, --interactive, --base, --adapter
+  demo.py                   ← Gradio web demo: single model or --compare base vs fine-tuned
 results/                    ← committed JSON files (source of truth for README numbers)
 outputs/                    ← git-ignored checkpoints and final adapter
 ```
