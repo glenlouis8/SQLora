@@ -43,7 +43,7 @@ def format_row(row, tokenizer):
     the causal LM loss only on the assistant tokens (via its loss masking).
     """
     user_content = row["questionTitle"]
-    if row.get("questionText", "").strip():
+    if (row.get("questionText") or "").strip():
         user_content = f"{row['questionTitle']}\n\n{row['questionText']}"
 
     messages = [
@@ -65,7 +65,7 @@ def format_prompt_only(row, tokenizer):
     produce the prompt we feed to model.generate().
     """
     user_content = row["questionTitle"]
-    if row.get("questionText", "").strip():
+    if (row.get("questionText") or "").strip():
         user_content = f"{row['questionTitle']}\n\n{row['questionText']}"
 
     messages = [
