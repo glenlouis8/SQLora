@@ -24,7 +24,7 @@ def load_and_split(cfg):
     Always uses cfg.data.seed so splits are reproducible across scripts.
     """
     dataset = load_dataset(cfg["data"]["dataset_name"], split="train")
-    dataset = dataset.filter(lambda row: row["upvotes"] >= 2)
+    dataset = dataset.filter(lambda row: row["upvotes"] >= 1)
     split = dataset.train_test_split(
         test_size=cfg["data"]["eval_split_ratio"],
         seed=cfg["data"]["seed"],
