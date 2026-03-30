@@ -50,7 +50,8 @@ def main():
     print("=" * 70)
     print("SAMPLE FORMATTED ROWS")
     print("=" * 70)
-    for i in [0, 100, 500]:
+    preview_indices = [int(len(train_ds) * p) for p in [0, 0.33, 0.66]]
+    for i in preview_indices:
         row = train_ds[i]
         formatted = format_row(row, tokenizer)
         print(f"\n--- Row {i} ---")
