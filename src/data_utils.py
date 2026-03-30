@@ -1,17 +1,16 @@
 """
 data_utils.py
 ─────────────
-Dataset loading, train/eval splitting, and Counsel Chat → chat template formatting.
+Dataset loading, train/eval splitting, and SQL context → chat template formatting.
 
 Both train.py and evaluate.py import from here to guarantee they always use
 the identical split (same seed=42) and identical prompt format.
 
-Dataset: nbertagnolli/counsel-chat
+Dataset: b-mc2/sql-create-context
 Fields used:
-  questionTitle  — short title of the user's question
-  questionText   — full question body (optional, may be empty)
-  answerText     — therapist's response (training target)
-  upvotes        — community upvotes; used to filter for quality answers
+  question  — natural language question
+  context   — SQL table schema (CREATE TABLE statements)
+  answer    — the correct SQL query (training target)
 """
 
 from datasets import load_dataset
@@ -19,12 +18,10 @@ from datasets import load_dataset
 
 def load_and_split(cfg):
     """
-    Load counsel-chat and return a train/test DatasetDict.
-    Filters to answers with at least 2 upvotes to keep quality high.
+    Load sql-create-context and return a train/test DatasetDict.
     Always uses cfg.data.seed so splits are reproducible across scripts.
     """
     dataset = load_dataset(cfg["data"]["dataset_name"], split="train")
-    dataset = dataset.filter(lambda row: row["upvotes"] >= 1)
     split = dataset.train_test_split(
         test_size=cfg["data"]["eval_split_ratio"],
         seed=cfg["data"]["seed"],
@@ -34,22 +31,20 @@ def load_and_split(cfg):
 
 def format_row(row, tokenizer):
     """
-    Convert a single Counsel Chat row into a training string using the
+    Convert a single sql-create-context row into a training string using the
     model's official chat template.
 
-    Counsel Chat fields: questionTitle, questionText (optional), answerText.
+    Fields: question (natural language), context (schema), answer (SQL query).
 
     The full string includes the assistant turn so SFTTrainer can compute
     the causal LM loss only on the assistant tokens (via its loss masking).
     """
-    user_content = row["questionTitle"]
-    if (row.get("questionText") or "").strip():
-        user_content = f"{row['questionTitle']}\n\n{row['questionText']}"
+    user_content = f"{row['question']}\n\nSchema:\n{row['context']}"
 
     messages = [
-        {"role": "system", "content": "You are a compassionate mental health counselor. Provide supportive, empathetic, and evidence-based responses to people seeking mental health guidance."},
+        {"role": "system", "content": "You are a SQL expert. Given a natural language question and a database schema, write a SQL query that answers the question. Return only the SQL query with no explanation."},
         {"role": "user", "content": user_content},
-        {"role": "assistant", "content": row["answerText"]},
+        {"role": "assistant", "content": row["answer"]},
     ]
 
     return tokenizer.apply_chat_template(
@@ -64,12 +59,10 @@ def format_prompt_only(row, tokenizer):
     Format a row WITHOUT the assistant turn — used during evaluation to
     produce the prompt we feed to model.generate().
     """
-    user_content = row["questionTitle"]
-    if (row.get("questionText") or "").strip():
-        user_content = f"{row['questionTitle']}\n\n{row['questionText']}"
+    user_content = f"{row['question']}\n\nSchema:\n{row['context']}"
 
     messages = [
-        {"role": "system", "content": "You are a compassionate mental health counselor. Provide supportive, empathetic, and evidence-based responses to people seeking mental health guidance."},
+        {"role": "system", "content": "You are a SQL expert. Given a natural language question and a database schema, write a SQL query that answers the question. Return only the SQL query with no explanation."},
         {"role": "user", "content": user_content},
     ]
 

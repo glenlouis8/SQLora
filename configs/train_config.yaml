@@ -25,17 +25,17 @@ lora:
 
 # ── Dataset ────────────────────────────────────────────────────────────────
 data:
-  dataset_name: "nbertagnolli/counsel-chat"
+  dataset_name: "b-mc2/sql-create-context"
   train_split_ratio: 0.95
   eval_split_ratio: 0.05
-  eval_sample_size: 100                # Rows used for ROUGE-L (full split for ppl); reduced because dataset is ~2,600 rows
+  eval_sample_size: 200                # Rows used for ROUGE-L (full split for ppl)
   seed: 42
 
 # ── Training ───────────────────────────────────────────────────────────────
 training:
   output_dir: "outputs/checkpoints"
   final_adapter_dir: "outputs/final_adapter"
-  num_train_epochs: 5                  # 5 epochs over ~2,600 examples (~35min on RTX 4090)
+  num_train_epochs: 1                  # 1 epoch over ~78k examples (~45min on T4)
   per_device_train_batch_size: 4
   gradient_accumulation_steps: 4      # Effective batch size = 16
   gradient_checkpointing: true        # Reduces VRAM ~40% at cost of ~20% speed
@@ -60,5 +60,5 @@ eval:
 
 # ── Hub ────────────────────────────────────────────────────────────────────
 hub:
-  repo_id: "glen-louis/llama-3.2-3b-counsel-qlora"
+  repo_id: "glen-louis/llama-3.2-3b-sql-qlora"
   private: false

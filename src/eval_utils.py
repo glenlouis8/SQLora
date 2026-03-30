@@ -93,7 +93,7 @@ def compute_rouge_l(model, tokenizer, dataset, cfg):
         # Strip the prompt tokens to get only the new generated text
         new_tokens = generated_ids[0][prompt_len:]
         generated_text = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
-        reference_text = row["answerText"].strip()
+        reference_text = row["answer"].strip()
 
         result = scorer.score(reference_text, generated_text)
         scores.append(result["rougeLsum"].fmeasure)
