@@ -2,9 +2,9 @@
   "stage": "after",
   "model": "meta-llama/Llama-3.2-3B-Instruct",
   "adapter": "outputs/final_adapter",
-  "eval_split_size": 17,
-  "perplexity": 18.8615,
-  "rouge_l": 0.2143,
+  "eval_split_size": 42,
+  "perplexity": 15.2676,
+  "rouge_l": 0.1936,
   "rouge_sample_size": 100,
   "eval_date": "2026-03-30"
 }
