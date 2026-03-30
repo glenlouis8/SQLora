@@ -25,17 +25,17 @@ lora:
 
 # ── Dataset ────────────────────────────────────────────────────────────────
 data:
-  dataset_name: "tatsu-lab/alpaca"
+  dataset_name: "nbertagnolli/counsel-chat"
   train_split_ratio: 0.95
   eval_split_ratio: 0.05
-  eval_sample_size: 200                # Rows used for ROUGE-L (full split for ppl)
+  eval_sample_size: 100                # Rows used for ROUGE-L (full split for ppl); reduced because dataset is ~2,600 rows
   seed: 42
 
 # ── Training ───────────────────────────────────────────────────────────────
 training:
   output_dir: "outputs/checkpoints"
   final_adapter_dir: "outputs/final_adapter"
-  num_train_epochs: 1                  # 1 epoch over 52k examples ~2.5hrs on RTX 4090
+  num_train_epochs: 3                  # 3 epochs over ~2,600 examples (~20min on RTX 4090)
   per_device_train_batch_size: 4
   gradient_accumulation_steps: 4      # Effective batch size = 16
   gradient_checkpointing: true        # Reduces VRAM ~40% at cost of ~20% speed
@@ -60,5 +60,5 @@ eval:
 
 # ── Hub ────────────────────────────────────────────────────────────────────
 hub:
-  repo_id: "glen-louis/llama-3.2-3b-alpaca-qlora"
+  repo_id: "glen-louis/llama-3.2-3b-counsel-qlora"
   private: false

@@ -5,7 +5,7 @@ Dry-run script: validate that dataset loading and formatting work correctly
 before committing to a long training run.
 
 What it does:
-  1. Downloads tatsu-lab/alpaca
+  1. Downloads nbertagnolli/counsel-chat
   2. Prints 3 formatted sample rows (so you can eyeball the chat template)
   3. Reports token length distribution (p50 / p90 / p99)
   4. Warns if p99 exceeds max_seq_length (would cause silent truncation)
@@ -24,7 +24,7 @@ import yaml
 import numpy as np
 from transformers import AutoTokenizer
 
-from src.data_utils import load_and_split, format_alpaca_row
+from src.data_utils import load_and_split, format_row
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
     print("=" * 70)
     for i in [0, 100, 500]:
         row = train_ds[i]
-        formatted = format_alpaca_row(row, tokenizer)
+        formatted = format_row(row, tokenizer)
         print(f"\n--- Row {i} ---")
         print(formatted[:800])
         if len(formatted) > 800:
@@ -68,7 +68,7 @@ def main():
 
     lengths = []
     for row in sample:
-        text = format_alpaca_row(row, tokenizer)
+        text = format_row(row, tokenizer)
         ids = tokenizer(text, truncation=False)["input_ids"]
         lengths.append(len(ids))
 

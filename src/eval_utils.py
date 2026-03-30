@@ -3,7 +3,7 @@ eval_utils.py
 ─────────────
 Perplexity and ROUGE-L computation for before/after evaluation.
 
-Both metrics are computed on the held-out test split (seed=42, ~5% of Alpaca).
+Both metrics are computed on the held-out test split (seed=42, ~5% of counsel-chat).
   - Perplexity: full test split, batched forward passes
   - ROUGE-L:    200 sampled rows, generation + reference comparison
 """
@@ -13,7 +13,7 @@ import torch
 import numpy as np
 from rouge_score import rouge_scorer
 
-from src.data_utils import format_alpaca_row, format_alpaca_prompt_only
+from src.data_utils import format_row, format_prompt_only
 
 
 def compute_perplexity(model, tokenizer, dataset, cfg):
@@ -29,7 +29,7 @@ def compute_perplexity(model, tokenizer, dataset, cfg):
 
     with torch.no_grad():
         for row in dataset:
-            text = format_alpaca_row(row, tokenizer)
+            text = format_row(row, tokenizer)
             inputs = tokenizer(
                 text,
                 return_tensors="pt",
@@ -72,7 +72,7 @@ def compute_rouge_l(model, tokenizer, dataset, cfg):
     max_new_tokens = cfg["eval"]["generation_max_new_tokens"]
 
     for row in sample:
-        prompt = format_alpaca_prompt_only(row, tokenizer)
+        prompt = format_prompt_only(row, tokenizer)
         inputs = tokenizer(
             prompt,
             return_tensors="pt",
@@ -93,7 +93,7 @@ def compute_rouge_l(model, tokenizer, dataset, cfg):
         # Strip the prompt tokens to get only the new generated text
         new_tokens = generated_ids[0][prompt_len:]
         generated_text = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
-        reference_text = row["output"].strip()
+        reference_text = row["answerText"].strip()
 
         result = scorer.score(reference_text, generated_text)
         scores.append(result["rougeLsum"].fmeasure)
