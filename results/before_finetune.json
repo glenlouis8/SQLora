@@ -2,9 +2,9 @@
   "stage": "before",
   "model": "meta-llama/Llama-3.2-3B-Instruct",
   "adapter": null,
-  "eval_split_size": 42,
-  "perplexity": 20.2304,
-  "rouge_l": 0.1937,
-  "rouge_sample_size": 100,
+  "eval_split_size": 3929,
+  "perplexity": 35.065,
+  "rouge_l": 0.9092,
+  "rouge_sample_size": 200,
   "eval_date": "2026-03-30"
 }
