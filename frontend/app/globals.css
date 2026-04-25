@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #F5F2EC;
+    color: #0F0F0F;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: #0F0F0F;
+    color: #F5F2EC;
+  }
+
+  textarea:focus,
+  button:focus-visible {
+    outline: 2px solid #0F0F0F;
+    outline-offset: 2px;
+  }
+
+  textarea {
+    resize: none;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #444;
+  }
+}

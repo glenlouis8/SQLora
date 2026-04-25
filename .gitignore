@@ -11,3 +11,7 @@ docs/
 CLAUDE.md
 
 notes.txt
+.python-version
+
+test_endpoint.txt
+serve/test_endpoint.txt
