@@ -193,7 +193,7 @@ export default function Home() {
         {/* Loading hint */}
         {status === "loading" && (
           <p className="mt-4 font-mono text-xs text-muted animate-fade-up">
-            Cold start may take ~30s on first request.
+            Cold start may take 1–2 min on first request. Subsequent requests are fast.
           </p>
         )}
 
