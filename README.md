@@ -1,6 +1,6 @@
-# llama-3.2-3b-alpaca-qlora
+# llama-3.2-3b-sql-qlora
 
-Fine-tuning `meta-llama/Llama-3.2-3B-Instruct` on `tatsu-lab/alpaca` (52k examples) using QLoRA — 4-bit NF4 quantization + LoRA adapters on all 7 attention/MLP projection layers.
+Fine-tuning `meta-llama/Llama-3.2-3B-Instruct` on `b-mc2/sql-create-context` (~78k examples) using QLoRA — 4-bit NF4 quantization + LoRA adapters on all 7 attention/MLP projection layers.
 
 ## Results
 
@@ -49,7 +49,7 @@ All scripts accept `--config configs/train_config.yaml` (default).
 | LoRA rank | r=16, alpha=32 (scale=2.0) |
 | LoRA targets | q/k/v/o/gate/up/down_proj (all 7 layers) |
 | Trainable params | ~20M |
-| Dataset | `tatsu-lab/alpaca` — 52k instruction examples |
+| Dataset | `b-mc2/sql-create-context` — ~78k Text-to-SQL examples |
 | Eval metrics | Perplexity (full eval split) + ROUGE-L (200 samples) |
 
 ## Config
@@ -67,7 +67,7 @@ Key training settings:
 ```
 configs/train_config.yaml   ← all hyperparameters
 src/
-  data_utils.py             ← dataset loading, train/eval split, chat template
+  data_utils.py             ← dataset loading, train/eval split, SQL prompt formatter
   model_utils.py            ← BnB 4-bit config, LoRA config, model loading
   eval_utils.py             ← perplexity + ROUGE-L evaluation
 scripts/
