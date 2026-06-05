@@ -1,5 +1,7 @@
 # llama-3.2-3b-sql-qlora
 
+![SQL.GEN Demo](./assets/demo.png)
+
 Fine-tuning `meta-llama/Llama-3.2-3B-Instruct` on `b-mc2/sql-create-context` (~78k examples) using QLoRA — 4-bit NF4 quantization + LoRA adapters on all 7 attention/MLP projection layers.
 
 ## Results
