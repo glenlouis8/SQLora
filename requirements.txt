@@ -13,3 +13,5 @@ python-dotenv>=1.0.0
 scipy>=1.13.0
 sentencepiece>=0.2.0
 protobuf>=4.25.0
+sqlglot>=23.0.0
+requests>=2.31.0

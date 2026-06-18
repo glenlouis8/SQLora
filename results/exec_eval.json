@@ -1,0 +1,11 @@
+{
+  "execution_accuracy": 0.9592,
+  "correct": 47,
+  "total": 49,
+  "skipped": 1,
+  "n_samples_requested": 50,
+  "eval_date": "2026-06-18",
+  "model": "meta-llama/Llama-3.2-3B-Instruct",
+  "adapter": "glen-louis/llama-3.2-3b-sql-qlora",
+  "modal_url": "https://rockyglen--sql-qlora-sqlmodel-api.modal.run"
+}

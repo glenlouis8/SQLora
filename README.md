@@ -15,6 +15,14 @@ Evaluated on a held-out 5% split (2,601 examples, seed=42).
 
 Evaluated on 2026-03-17. ROUGE-L computed over 200 sampled examples with greedy decoding.
 
+### Execution Accuracy
+
+| Metric | Score |
+|--------|-------|
+| Execution Accuracy | **95.9%** (47/49) |
+
+Evaluated on 2026-06-18 over 50 held-out samples via Modal inference. Execution accuracy runs both the model-generated SQL and the reference SQL against an in-memory SQLite database populated with synthetic data, then compares result sets — catching logic errors that string-similarity metrics miss.
+
 ## Setup
 
 ```bash
@@ -52,7 +60,7 @@ All scripts accept `--config configs/train_config.yaml` (default).
 | LoRA targets | q/k/v/o/gate/up/down_proj (all 7 layers) |
 | Trainable params | ~20M |
 | Dataset | `b-mc2/sql-create-context` — ~78k Text-to-SQL examples |
-| Eval metrics | Perplexity (full eval split) + ROUGE-L (200 samples) |
+| Eval metrics | Perplexity (full eval split) + ROUGE-L (200 samples) + Execution Accuracy (50 samples) |
 
 ## Config
 
@@ -72,10 +80,12 @@ src/
   data_utils.py             ← dataset loading, train/eval split, SQL prompt formatter
   model_utils.py            ← BnB 4-bit config, LoRA config, model loading
   eval_utils.py             ← perplexity + ROUGE-L evaluation
+  exec_eval_utils.py        ← execution accuracy (schema parse, SQLite, result comparison)
 scripts/
   prepare_data.py           ← dry-run: preview samples + token stats
   train.py                  ← SFTTrainer training loop
   evaluate.py               ← before/after eval → writes results/*.json
+  exec_eval.py              ← execution accuracy eval via Modal API (no GPU needed)
   push_to_hub.py            ← push adapter + auto-generated model card
 results/                    ← evaluation JSON files (source of truth for model card)
 outputs/                    ← git-ignored checkpoints and final adapter
