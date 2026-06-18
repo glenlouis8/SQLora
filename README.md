@@ -1,4 +1,4 @@
-# llama-3.2-3b-sql-qlora
+# SQLora
 
 ![SQL.GEN Demo](./assets/demo.png)
 
